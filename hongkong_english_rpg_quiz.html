@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hong Kong English RPG Quiz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {font-family: "Segoe UI", Arial, sans-serif; margin: 0; padding: 0; background: #212145; min-height: 100vh; color: #fafafa;}
+    #game-container {max-width: 520px; margin: 0 auto; padding: 2em 1em 3em 1em; background: rgba(35, 34, 60, 0.95); border-radius: 16px; margin-top: 2em; box-shadow: 0 2px 16px rgba(0,0,0,0.3);}
+    .stats {display: flex; justify-content: space-between; margin-bottom: 1em;}
+    .bar {height: 18px; border-radius: 9px; background: #fff2; margin-bottom: 4px; overflow: hidden; margin-top: 3px;}
+    .bar-inner {height: 100%; border-radius: 9px;}
+    .bar-player {background: linear-gradient(90deg,#70f570,#49c628);}
+    .bar-npc {background: linear-gradient(90deg,#f85032,#e73827);}
+    h2 {margin-top: 0.4em; margin-bottom: 0.5em; font-size: 1.3em;}
+    .question {margin: 1.2em 0; font-size: 1.1em; line-height: 1.5;}
+    .answers {margin-bottom: 1.2em;}
+    .answers button {background: #39397a; color: #fafafa; border: none; padding: 0.6em 1.2em; margin: 0.3em 0.3em 0.3em 0; border-radius: 7px; font-size: 1em; transition: background 0.2s; cursor: pointer; box-shadow: 0 2px 8px #0002; min-width: 120px;}
+    .answers button:focus {outline: 2px solid #FFD700;}
+    .answers button:hover, .answers .correct {background: #38ef7d; color: #30305a;}
+    .answers .wrong {background: #f85032; color: #fff;}
+    #log {border-top: 1px solid #fff2; padding-top: 1em; margin-top: 1em; font-size: 0.97em; color: #ffffcc; min-height: 2em;} /* Improved contrast for accessibility */
+    #score-panel {margin-bottom: 1em; text-align: center; font-size: 1.12em; color: #f1e16a; font-weight: 600;}
+    #story {background: #39397a; border-radius: 7px; padding: 0.8em 1em; margin-bottom: 1.2em; font-size: 1.05em; color: #fdfbdf; min-height: 2.2em;}
+    .enemy-img {font-size: 2.3em; margin-bottom: 0.2em; display: inline-block; vertical-align: middle; transition: transform 0.2s;} /* Animation for hit feedback */
+    .enemy-hit {transform: translateX(-5px);} /* Animation class for hit */
+    .inventory {margin: 0.6em 0 0.3em 0; display: flex; flex-wrap: wrap; gap: 8px; min-height: 2.2em; overflow-x: auto;} /* Scrollable on small screens for responsive design */
+    .inv-btn {background: #f3f3aa; color: #2a2a2a; border-radius: 5px; padding: 0.25em 0.7em; font-size: 0.95em; margin-right: 0.2em; margin-bottom: 0.2em; display: flex; align-items: center; gap: 4px; cursor: pointer; border: none; transition: filter 0.2s; box-shadow: 0 2px 6px #0002;}
+    .inv-btn:disabled {background: #b6b6a9; color: #5a5a5a; filter: grayscale(0.6); cursor: default;}
+    .inventory-empty {color: #b6b6a9; font-style: italic;} /* Placeholder for empty inventory */
+    .progress-bar-bg {width: 100%; height: 12px; background: #2c2c3e; border-radius: 7px; margin: 7px 0 13px 0; overflow: hidden;}
+    .progress-bar {height: 100%; background: linear-gradient(90deg,#FFD700,#38ef7d 70%); border-radius: 7px; transition: width 0.4s;}
+    #glossary-btn, #hint-btn, #save-exit-btn, #tutorial-btn, #stats-btn, #audio-toggle-btn {background: #70f570; color: #222; font-size: 1.0em; padding: 0.5em 1.3em; border: none; border-radius: 7px; cursor: pointer; margin: 0.4em 0.2em 0.4em 0; box-shadow: 0 2px 8px #0002; display: inline-block; min-width: 110px;}
+    #hint-btn[disabled] {background: #b6e2bc; color: #5a5a5a; cursor: default;}
+    #glossary-modal, #tutorial-modal, #stats-modal, #confirm-modal {position: fixed; top:0; left:0; width:100vw; height:100vh; background: rgba(0,0,0,0.66); z-index: 1000; display: none; align-items: center; justify-content: center;}
+    .modal-content {background: #22224A; color: #fdfbdf; padding: 2em 1.2em; border-radius: 14px; max-width: 350px; text-align: center; position: relative; box-shadow: 0 2px 16px #0007;}
+    .modal-content button {background: #FFD700; color: #24243e; font-weight: 600; border-radius: 8px; padding: 0.4em 1.5em; margin-top: 1em; border: none; font-size: 1.06em; cursor: pointer;}
+    .glossary-term {font-weight: bold; color: #FFD700;}
+    .glossary-pron {font-style: italic; color: #a0e4e4;}
+    .glossary-def {color: #f2eeb7; margin-bottom: 0.6em; display: block;}
+    .glossary-category {color: #a0e4e4; font-weight: bold; margin-top: 1em; cursor: pointer;}
+    .glossary-search {width: 90%; padding: 0.5em; margin-bottom: 1em; font-size: 1em; color: #222; background: #fff; border: none; border-radius: 5px;}
+    .cultural-note {position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #39397a; color: #fdfbdf; padding: 0.5em 1em; border-radius: 5px; box-shadow: 0 2px 8px #0002; z-index: 999; display: none; max-width: 300px; font-size: 0.9em; text-align: center;}
+    @media (max-width: 700px) {#game-container {padding: 1em 0.5em;} .stats {flex-direction: column; gap: 0.4em;} .enemy-img {font-size:2em;} #score-panel {font-size: 1em;} .inv-btn {font-size:0.89em;} .answers button {font-size: 0.9em; padding: 0.5em 0.8em;}}
+  </style>
+</head>
+<body>
+<div id="game-container">
+  <h2>Hong Kong English RPG Quiz</h2>
+  <div id="menu">
+    <p>Answer Hong Kong English questions to defeat monsters and unlock the city's secrets!<br>
+    <button id="start-btn" tabindex="0">Start Game</button>
+    <button id="resume-btn" style="display:none;" tabindex="0">Resume Game</button>
+    <button id="glossary-btn" tabindex="0">Glossary</button>
+    <button id="tutorial-btn" tabindex="0">Tutorial</button>
+    <button id="stats-btn" tabindex="0">Stats</button>
+    <button id="audio-toggle-btn" tabindex="0">🔊 Audio On</button>
+  </div>
+  <div id="game" style="display:none;">
+    <button id="save-exit-btn" tabindex="0">Save & Exit</button>
+    <div id="story"></div>
+    <div class="progress-bar-bg"><div class="progress-bar" id="progress-bar"></div></div>
+    <div id="score-panel">
+      Score: <span id="score">0</span>
+    </div>
+    <div class="stats">
+      <div>
+        <strong>You</strong>
+        <div class="bar"><div id="player-hp" class="bar-inner bar-player" style="width:100%"></div></div>
+        <span id="player-hp-text">HP: 100</span>
+        <div class="inventory" id="inventory"></div>
+      </div>
+      <div style="text-align:right;">
+        <span class="enemy-img" id="npc-img">👹</span><br>
+        <strong id="npc-name">Monster</strong>
+        <div class="bar"><div id="npc-hp" class="bar-inner bar-npc" style="width:100%"></div></div>
+        <span id="npc-hp-text">HP: 100</span>
+      </div>
+    </div>
+    <div class="question" id="question"></div>
+    <div class="answers" id="answers"></div>
+    <div>
+      <button id="hint-btn" tabindex="0">💡 Hint</button>
+    </div>
+    <div id="event" style="color:#FFD700;margin:1em 0;"></div>
+    <div id="log"></div>
+  </div>
+  <div id="gameover" style="display:none;">
+    <h2 id="gameover-title"></h2>
+    <div id="gameover-msg"></div>
+    <button id="restart-btn" tabindex="0">Restart Game</button>
+  </div>
+</div>
+<div id="glossary-modal"><div class="modal-content"></div></div>
+<div id="tutorial-modal"><div class="modal-content"></div></div>
+<div id="stats-modal"><div class="modal-content"></div></div>
+<div id="confirm-modal"><div class="modal-content"></div></div>
+<div id="cultural-note" class="cultural-note"></div>
+<script>
+// --- SOUND EFFECTS AND AUDIO TOGGLE ---
+let audioEnabled = true; // Accessibility: Toggle for audio
+
+function playSound(type) {
+  if (!audioEnabled) return; // Respect audio toggle
+  try {
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    if(type==="hit") { o.type="square"; o.frequency.value=220; g.gain.value=0.16; o.start();
+      setTimeout(()=>{o.frequency.value=140;},70); setTimeout(()=>{g.gain.linearRampToValueAtTime(0,ctx.currentTime+0.08);},110); o.stop(ctx.currentTime+0.18);
+    }
+    else if(type==="wrong") { o.type="triangle"; o.frequency.value=100; g.gain.value=0.12; o.start();
+      setTimeout(()=>{g.gain.linearRampToValueAtTime(0,ctx.currentTime+0.11);},110); o.stop(ctx.currentTime+0.17);
+    }
+    else if(type==="boss") { o.type="sawtooth"; o.frequency.value=80; g.gain.value=0.22; o.start();
+      setTimeout(()=>{o.frequency.value=220;},80); setTimeout(()=>{g.gain.linearRampToValueAtTime(0,ctx.currentTime+0.17);},150); o.stop(ctx.currentTime+0.26);
+    }
+    else if(type==="victory") { o.type="triangle"; o.frequency.value=523; g.gain.value=0.18; o.start();
+      setTimeout(()=>{o.frequency.value=659;},100); setTimeout(()=>{o.frequency.value=784;},180); setTimeout(()=>{g.gain.linearRampToValueAtTime(0,ctx.currentTime+0.18);},270); o.stop(ctx.currentTime+0.32);
+    }
+    else if(type==="defeat") { o.type="square"; o.frequency.value=196; g.gain.value=0.17; o.start();
+      setTimeout(()=>{o.frequency.value=98;},90); setTimeout(()=>{g.gain.linearRampToValueAtTime(0,ctx.currentTime+0.18);},160); o.stop(ctx.currentTime+0.26);
+    }
+    else if(type==="item") { o.type="triangle"; o.frequency.value=600; g.gain.value=0.17; o.start();
+      setTimeout(()=>{o.frequency.value=900;},80); setTimeout(()=>{g.gain.linearRampToValueAtTime(0,ctx.currentTime+0.11);},130); o.stop(ctx.currentTime+0.18);
+    }
+    setTimeout(()=>ctx.close(),350);
+  } catch(e){ console.log("Audio error suppressed:", e); } // Technical Improvement: Error handling for audio
+}
+
+// Toggle audio state (Accessibility Improvement)
+document.getElementById("audio-toggle-btn").onclick = function() {
+  audioEnabled = !audioEnabled;
+  this.innerHTML = audioEnabled ? "🔊 Audio On" : "🔇 Audio Off";
+};
+document.getElementById("audio-toggle-btn").onkeydown = function(event) {
+  if (event.key === "Enter" || event.key === " ") {
+    this.click();
+  }
+};
+document.getElementById("audio-toggle-btn").onkeyup = function(event) {
+  if (event.key === "Enter" || event.key === " ") {
+    this.blur(); // Remove focus after activation
+  }
+};
+// --- CSV DATA AS OBJECTS (Full Version Based on fyp - 工作表2.csv) ---
+const csvRows = [
+  ["Loanwords from Cantonese", "Cha chan teng", "Cha chaan teng (茶餐廳) is a term that refers to a type of informal, affordable restaurant commonly found in Hong Kong and some other Cantonese-speaking regions. The name literally translates to \"tea restaurant\" or \"tea diner.\" These establishments are known for their unique blend of Cantonese cuisine with Western influences, reflecting Hong Kong's colonial history and cultural fusion", "Did you know? Cha chaan tengs are a symbol of Hong Kong's East-meets-West culture!", ""],
+  ["Loanwords from Cantonese", "Dim sum", "Dim sum (點心) is a traditional Chinese style of dining that involves small, bite-sized portions of food served in steamer baskets or on small plates. The term \"dim sum\" literally translates to \"touch the heart\" in Cantonese, suggesting that these dishes are meant to delight and satisfy.", "Did you know? Dim sum is often enjoyed as a social brunch with family and friends.", ""],
+  ["Loanwords from Cantonese", "Siu mei", "Siu mei (燒味) is a term in Cantonese cuisine that refers to roasted meats, which are a staple of Hong Kong and southern Chinese food culture. The term literally translates to \"roasted flavor\" or \"roasted delicacy.\" Siu mei dishes are characterized by their crispy skin, succulent meat, and aromatic flavors, achieved through traditional roasting techniques.", "", ""],
+  ["Loanwords from Cantonese", "Gweilo (gweibor, gweichai, gweimui)", "Foreigner, especially a white person (informal, sometimes impolite)", "", ""],
+  ["Loanwords from Cantonese", "Lai see", "Red envelope with money, given for luck (especially at Lunar New Year)", "Did you know? Lai see are traditionally given by married individuals to unmarried ones during Lunar New Year.", ""],
+  ["Loanwords from Cantonese", "Joss paper", "Paper offerings burned for ancestors in traditional rituals", "", ""],
+  ["Loanwords from Cantonese", "Pak choi", "A type of leafy Chinese cabbage", "", ""],
+  ["Loanwords from Cantonese", "Mahjong", "Chinese tile-based game", "", ""],
+  ["Loanwords from Cantonese", "Boh boh cha cha", "Sweet, coconut-based dessert soup", "", ""],
+  ["Loanwords from Cantonese", "Bak kut teh", "Pork rib and herbal soup (from Malaysia/Singapore, by Cantonese speakers)", "", ""],
+  ["Loanwords from Cantonese", "Char siu", "Barbecued pork with sweet sauce", "", ""],
+  ["Loanwords from Cantonese", "Cheung fun", "Rice noodle rolls, often with filling", "", ""],
+  ["Loanwords from Cantonese", "Congee", "Rice porridge", "", ""],
+  ["Loanwords from Cantonese", "Dai pai dong", "Open-air food stall (found in Hong Kong)", "", ""],
+  ["Loanwords from Cantonese", "Egg tart", "Pastry shell with egg custard (Hong Kong dessert)", "", ""],
+  ["Loanwords from Cantonese", "Gai dan zai", "Egg waffle snack", "", ""],
+  ["Loanwords from Cantonese", "Lo mai gai", "Sticky rice with chicken, wrapped in lotus leaf", "", ""],
+  ["Loanwords from Cantonese", "Wonton", "Dumpling with meat/seafood filling", "", ""],
+  ["Loanwords from Cantonese", "Kai fong", "Neighbour, or people living in the same area", "", ""],
+  ["Loanwords from Cantonese", "Cheongsam", "long shirt to wear", "", ""],
+  ["Loanwords from Cantonese", "Feng shui", "Chinese practice of harmonizing spaces for luck/energy", "", ""],
+  ["Loanwords from Cantonese", "Jetso", "Special offer, promotion, or discount", "", ""],
+  ["Loanwords from Cantonese", "Hong", "A business firm or trading company (from Cantonese \"hang\")", "", ""],
+  ["Loanwords from Cantonese", "yum cha", "\"Drink tea\"—going for dim sum, usually a bunch of people will yum cha together,", "", ""],
+  ["Localized English Phrases & Expressions", "Add oil", "A phrase of encouragement", "Did you know? 'Add oil' comes from the Cantonese phrase 'ga yau' and is widely used to cheer someone on.", ""],
+  ["Localized English Phrases & Expressions", "Long time no see", "haven't seen you a while", "", ""],
+  ["Localized English Phrases & Expressions", "Mark six", "A popular lottery game", "", ""],
+  ["Localized English Phrases & Expressions", "Same same but different.", "almost the same as before but a little bit different", "", ""],
+  ["Localized English Phrases & Expressions", "I am full of fire!", "which means that someone who is being very angry or aggressive.", "", ""],
+  ["Localized English Phrases & Expressions", "Eat ng eat rice", "do you want to have lunch/ dinner?", "", ""],
+  ["Localized English Phrases & Expressions", "Me also 5g", "I also don't know", "", ""],
+  ["Localized English Phrases & Expressions", "sldpk", "which means lmfao in english slang", "", ""],
+  ["Localized English Phrases & Expressions", "kam", "describe someone is cringe or awkward to talk with", "", ""],
+  ["Localized English Phrases & Expressions", "JHGG", "I'm just saying", "", ""],
+  ["Localized English Phrases & Expressions", "FAMJ", "genz slang and describe some one is famous on instagram", "", ""],
+  ["Localized English Phrases & Expressions", "MM7", "something being awesome, as those are the symbols used to type the character 正 (really good)", "", ""],
+  ["Localized English Phrases & Expressions", "Polly shum", "someone who is sensitive and easily hurt, just like fragile piece of glass", "", ""],
+  ["Localized English Phrases & Expressions", "0 firm", "describe someone/ something is not ok, and not good", "", ""],
+  ["Localized English Phrases & Expressions", "wan gat", "means to mess about and not help or contribute meaningfully at all", "", ""],
+  ["Localized English Phrases & Expressions", "laap flag", "When someone ‘raises a flag’, it means they were being vocal about their plans or goals, but the end result is completely opposite to what they said they would achieve. The ‘flag’ is a reference to the anime series The Tower of Druaga, where it is a common foreshadowing trope that any character who claims they ‘will go home to get married after this battle’ inevitably ends up dead. So if you tell your friends you’re going on a diet, but end up eating ice cream in front of the telly, that’s a ‘raised flag’.", "", ""],
+  ["Localized English Phrases & Expressions", "daai luk mou", "You won’t ever catch a Chinese man wearing green-coloured hats or caps, because this symbolises that your significant other is cheating on you! Notably, it applies to men with unfaithful wives or girlfriends; you’d rarely say a girl is ‘wearing a green hat’. If you’re the one who cheated on your man, you can also say you’re ‘giving them a green hat to wear’.", "", ""],
+  ["Localized English Phrases & Expressions", "ngaam aa", "Though this Cantonese phrase is regularly used to show agreement, Gen Z have recently co-opted it and given it a condescending twist. If you’re ever speaking to someone annoying but can’t be bothered to refute them, simply do what the kids do and deadpan ‘That’s right’ to everything. While on the surface you’re agreeing, this phrase shows innate disapproval by being patronising.", "", ""],
+  ["Localized English Phrases & Expressions", "wui seoi", "To ‘return water’ means to refund money to a customer. In Cantonese slang, the word ‘water’ can have several meanings, but in this application it is used to reference money – $100 is colloquially referred to as ‘one clump of water’ (yaat gau shui; 一嚿水). To ‘return water’ therefore also often signifies a certain level of dissatisfaction with services, products, or performance.", "", ""],
+  ["Localized English Phrases & Expressions", "fai seoi", "Originating from Macau, ‘waste water’ refers to Taiwanese-style sugary drinks that are high in calories and not much else, such as bubble teas, black sugar milk teas, or fruit teas that so often line our streets. The implication is obviously that these drinks are just rubbish for our health – even if they taste good. Another similar slang term for these drinks is ‘fatty water’ (fei jai seui; 肥仔水).", "", ""],
+  ["Localized English Phrases & Expressions", "gam gin fan", "Originating from online forums where people post about their relationship problems and ask for advice, this phrase is short for ‘When it comes to romance, my recommendation is always to split up’ (關於感情的問題，我一律建議分手). This pessimistic view on relationships stems from the tendency of forum participants to disregard advice even after engaging in lengthy, heated debates. Frustrated netizens now commonly comment ‘Romance Recc Split’ on posts related to romance.", "", ""],
+  ["Localized English Phrases & Expressions", "saau pei", "To be used with some caution, telling someone to ‘collect skin’ equates to telling them to shut the f*ck up. The phrase allegedly originated from street vendors who would display their wares on wooden or cardboard mats, which they called pei (皮; skin). The act of packing up and clearing out when police arrive was therefore called ‘collecting skin’.", "", ""],
+  ["Localized English Phrases & Expressions", "zi fei", "Popularised by the ViuTV programme Error Selfish Project (Error自肥計畫 in Chinese), to ‘make yourself fat’ means using sneaky or unscrupulous means to benefit yourself or line your own pockets. Though obviously it’s kind of a negative thing, people usually accuse others of ‘making themselves fat’ with an envious tone.", "", ""],
+  ["Localized English Phrases & Expressions", "waai gwo hot ting", "a phrase used to describe someone as very bad or very naughty.", "", ""],
+  ["Localized English Phrases & Expressions", "siu hok gai", "people acting immature and foolish. This phrase can be applied to both dumb people or situations.", "", ""],
+  ["Localized English Phrases & Expressions", "zuk cung", "This term means to get yourself into trouble, causing unnecessary difficulties.", "", ""],
+  ["Localized English Phrases & Expressions", "gai tung aap gong", "This phrase describes people who are unable to properly communicate with each other, whether due to language barriers or different values. No matter what is said, the chicken and duck just can’t seem to understand each other.", "", ""],
+  ["Localized English Phrases & Expressions", "fat hai", "A term to describe someone who takes a nonchalant attitude towards life. If you are having a Buddhist-style love life, it means you do nothing to rush and just wait to be approached as you believe whatever will be, will be!", "", ""],
+  ["Localized English Phrases & Expressions", "se bo", "A metaphor for sloughing off all your responsibilities to someone else. The phrase is most commonly used to describe someone who fakes an illness and skips a day at the office in order to avoid work and responsibilities.", "", ""],
+  ["Localized English Phrases & Expressions", "fuk", "Literally meaning trap, this word is an adjective used to describe something that's of questionable or misleading quality, and thus likely to cause someone to fall into a 'trap'. A close English translation would be the word 'dodgy'.", "", ""],
+  ["Localized English Phrases & Expressions", "keh ngauh wan mah", "This phrase describes the situation when a person is working one job but is actually on the lookout for something better at the same time. This saying can also be applied to relationships.", "", ""],
+  ["Localized English Phrases & Expressions", "zaa baa si", "This term is used to describe someone who has had one too many drinks and is about to be sick in the toilet. The way they’re gripping the toilet seat resembles the way bus drivers hold a steering wheel.", "", ""],
+  ["Localized English Phrases & Expressions", "sau bing", "Used to describe the process by which a girl accumulates many male 'friends' with the sole purpose of friend-zoning them and utilising them to help her run tedious errands or even getting them to buy her expensive gifts.", "", ""],
+  ["Localized English Phrases & Expressions", "fong sim", "Frequently seen on social media – though you can use it in person too – this phrase describes the blinding radiance emitted by a pair of lovebirds openly displaying their affection for one another.", "", ""],
+  ["Localized English Phrases & Expressions", "lok gau si", "No, not something you say when you want your mutt to do his or her business. Rather, this expression is the English equivalent of ‘raining cats and dogs’ – just not as cute.", "", ""],
+  ["Localized English Phrases & Expressions", "baan zyu sik lou fu", "A fairly common phrase, the phrase means to manipulate someone into a false sense of security. It is usually used to describe a backstabber who appears to be innocent or even dim but turns out to be utterly devious.", "", ""],
+  ["Localized English Phrases & Expressions", "laai ye", "A multipurpose phrase used to describe a person who has gotten themselves into some sort of spectacular disaster. Similar to exclaiming ‘you’re screwed!’.", "", ""],
+  ["Localized English Phrases & Expressions", "yau lok", "when taking mini bus, and you need to get off the mini bus", "", ""],
+  ["Localized English Phrases & Expressions", "siu tong", "most used words when you want less sugar in the drink in Cha chan teng", "", ""],
+  ["Localized English Phrases & Expressions", "lengjai/neoi", "someone is handsome or beautiful", "", ""],
+  ["Localized English Phrases & Expressions", "siu4", "which means lol in english slang", "", ""],
+  ["Unique Hong Kong Concepts in English", "DC9", "a nick name for taxi drivers since their bad behaviors", "", ""],
+  ["Unique Hong Kong Concepts in English", "Tea money", "when you go to yum cha and the money that you need to pay for the sit", "", ""],
+  ["Unique Hong Kong Concepts in English", "Ding ding", "Hong Kong’s trams (for their “ding ding” sound)", "Did you know? These trams have been running on Hong Kong Island since 1904!", ""],
+  ["Unique Hong Kong Concepts in English", "Chop", "Official stamp or seal used for business/legal", "", ""],
+  ["Code-Mixing", "Must can", "Definitely possible, surely can", "", ""],
+  ["Code-Mixing", "Chinglish", "Mix of Chinese and English, often with direct translations", "Did you know? Chinglish often results in humorous or literal translations unique to Hong Kong.", ""],
+  ["Code-Mixing", "Hot air", "describing a person who is heaty inside, and immnue system decline and get sick", "", ""],
+  ["Code-Mixing", "No eye see", "don't want to watch or dont want be part of something", "", ""],
+  ["Code-Mixing", "Add salt add vinegar", "Exaggerate a story, gossip more", "", ""],
+  ["Code-Mixing", "Have heart", "describe people who is caring", "", ""],
+  ["Code-Mixing", "Chok face", "some one who is acting cool or having a poker face", "", ""],
+  ["Code-Mixing", "Kong girl", "Stereotype for certain Hong Kong girls (fashionable, materialistic)", "", ""],
+  ["Code-Mixing", "Have chop or not?", "Is there an official stamp? Is it authorized?", "", ""],
+  ["Code-Mixing", "Kung Hei Fat Choy", "Wishing you prosperity (New Year greeting)", "", ""],
+  ["Code-Mixing", "Chi sin", "describing someone is nut or crazy", "", ""],
+  ["Code-Mixing", "Same on you! (Shame on you)", "Shame on you (playful mispronunciation)", "", ""],
+  ["Code-Mixing", "You’re the goodest", "You’re the best (Chinglish)", "", ""],
+  ["Code-Mixing", "Ho hoi sum", "means that i'm very happy", "", ""],
+  ["Code-Mixing", "Ahmah", "grandmother", "", ""],
+  ["Code-Mixing", "Eat jor mud", "What did you eat? (direct translation)", "", ""],
+  ["Code-Mixing", "No leung heart", "No conscience, not caring", "", ""],
+  ["Code-Mixing", "People mountain people sea", "Very crowded space", "", ""],
+  ["Code-Mixing", "Sor9ly", "Sorry (playful, “9” = “gau” = rude pun in Cantonese)", "", ""],
+  ["Code-Mixing", "Exact7ly", "Exactly (with “7” as a pun; “7” = “chat” = rude in Cantonese)", "", ""],
+  ["Code-Mixing", "Blow water", "Shoot the breeze, chat casually", "", ""],
+  ["Code-Mixing", "Fly airplane", "To stand someone up", "", ""],
+  ["Code-Mixing", "Hand letter", "sovenouir for people why other travel back", "", ""],
+  ["Code-Mixing", "PK", "means shit in english", "", ""]
+];
+
