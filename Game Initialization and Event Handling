@@ -1,0 +1,123 @@
+// --- GAME START AND TUTORIAL (Replayability and Engagement: Tutorial for New Players) ---
+function startGame() {
+  // Check if tutorial has been seen; if not, show it first
+  if (!localStorage.getItem("hkrpgquiz_tutorial_seen")) {
+    showTutorial();
+    localStorage.setItem("hkrpgquiz_tutorial_seen", "true");
+  } else {
+    initializeGame();
+  }
+}
+function initializeGame() {
+  // Check for New Game+ mode (Replayability and Engagement: New Game Plus Mode)
+  let isNewGamePlus = localStorage.getItem("hkrpgquiz_game_completed") === "true";
+  document.getElementById('menu').style.display = 'none';
+  document.getElementById('game').style.display = '';
+  document.getElementById('gameover').style.display = 'none';
+  state = {player: {hp:100, maxHp:100, attack:15}, npcIndex: 0, npcs: JSON.parse(JSON.stringify(npcs)), log: [], score: 0, inventory: [], skillEffects: {}, turnCount: 0, itemsUsedThisBattle: 0};
+  // Adjust difficulty for New Game+ mode
+  if (isNewGamePlus) {
+    state.npcs.forEach(npc => {
+      npc.hp = Math.floor(npc.baseHp * 1.2); // 20% HP increase
+      npc.attack = Math.floor(npc.baseAttack * 1.1); // 10% attack increase
+    });
+    state.log.push("<span style='color:#FFD700'>New Game+ Mode: Enemies are stronger!</span>");
+  }
+  usedQuestions = [];
+  bossQuestionPool = shuffle(questions.filter(q=>q.cat==="Boss"));
+  hintUsed = false;
+  randomEventHappened = false; inRandomEvent = false; randomEventQ=0; randomEventCorrect=0; itemsGivenThisGame=[];
+  correctStreak = 0; // Initialize streak for difficulty scaling
+  gameStats.totalGames++;
+  gameStats.startTime = Date.now(); // Track start time for Speed Demon achievement
+  giveStartItems();
+  updateStory();
+  updateInventoryPanel();
+  updateStats();
+  nextNpc();
+  saveGame();
+  saveStats();
+}
+function giveStartItems() {
+  itemsGivenThisGame = [];
+  let pool = shuffle(itemList.slice());
+  for(let i=0;i<2;i++) {
+    let it = {...pool.pop()};
+    state.inventory.push(it);
+    itemsGivenThisGame.push(it.name);
+  }
+  updateInventoryPanel();
+}
+
+// --- TUTORIAL (Replayability and Engagement: Tutorial for New Players) ---
+function showTutorial() {
+  let modal = document.getElementById("tutorial-modal");
+  let c = modal.querySelector(".modal-content");
+  c.innerHTML = `
+    <h3>Welcome to HK English RPG Quiz!</h3>
+    <p>Learn Hong Kong English terms by battling monsters!</p>
+    <ul style="text-align:left; padding: 0 1em;">
+      <li>Click answers to attack enemies with your knowledge.</li>
+      <li>Use items from your inventory to heal or gain advantages.</li>
+      <li>Earn points for correct answers and defeat bosses to win!</li>
+      <li>Check the Glossary to review learned terms.</li>
+      <li>Use keyboard navigation (Tab, Enter) if needed.</li>
+    </ul>
+    <button id="start-after-tutorial-btn">Start Game</button>
+  `;
+  modal.style.display = "flex";
+  c.querySelector("#start-after-tutorial-btn").onclick = function() {
+    modal.style.display = "none";
+    initializeGame();
+  };
+  modal.onclick = function(e) { if(e.target===this) this.style.display = "none"; initializeGame(); };
+}
+document.getElementById("tutorial-btn").onclick = function() {
+  showTutorial();
+};
+
+// --- STATS AND LEADERBOARDS (Replayability and Engagement: Leaderboards or Stats) ---
+function showStats() {
+  let modal = document.getElementById("stats-modal");
+  let c = modal.querySelector(".modal-content");
+  let achUnlocked = achievements.filter(a => a.achieved).length;
+  c.innerHTML = `
+    <h3>Game Stats</h3>
+    <div style="text-align:left; padding: 0 1em; max-height: 260px; overflow: auto;">
+      <p><b>High Score:</b> ${gameStats.highScore}</p>
+      <p><b>Total Correct Answers:</b> ${gameStats.totalCorrect}</p>
+      <p><b>Games Played:</b> ${gameStats.totalGames}</p>
+      <p><b>Total Hints Used:</b> ${gameStats.totalHints}</p>
+      <p><b>Fastest Game:</b> ${gameStats.fastestGame === Infinity ? "N/A" : Math.floor(gameStats.fastestGame / 60000) + " min " + Math.floor((gameStats.fastestGame % 60000) / 1000) + " sec"}</p>
+      <h4>Achievements Unlocked: ${achUnlocked}/${achievements.length}</h4>
+      ${achievements.map(a => `<p><b>${a.name}:</b> ${a.achieved ? "✅ Unlocked" : "🔒 Locked"}<br><small>${a.desc}</small></p>`).join("")}
+    </div>
+    <button id="close-stats-btn">Close</button>
+  `;
+  modal.style.display = "flex";
+  c.querySelector("#close-stats-btn").onclick = function() { modal.style.display = "none"; };
+  modal.onclick = function(e) { if(e.target===this) this.style.display = "none"; };
+}
+document.getElementById("stats-btn").onclick = showStats;
+
+// --- EVENT HANDLING FOR BUTTONS (Accessibility: Keyboard Navigation) ---
+document.getElementById("start-btn").onclick = startGame;
+document.getElementById("restart-btn").onclick = function() { clearSave(); startGame(); };
+document.getElementById("resume-btn").onclick = function() { loadGame(); };
+document.getElementById("save-exit-btn").onclick = function() {
+  saveGame();
+  document.getElementById('game').style.display = 'none';
+  document.getElementById('gameover').style.display = 'none';
+  document.getElementById('menu').style.display = '';
+  document.getElementById('resume-btn').style.display = '';
+};
+// Keyboard navigation for menu buttons (Accessibility Improvement)
+document.querySelectorAll('#menu button').forEach(btn => {
+  btn.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      this.click();
+    }
+  });
+});
+if(localStorage.getItem("hkrpgquiz_save")) document.getElementById('resume-btn').style.display = '';
