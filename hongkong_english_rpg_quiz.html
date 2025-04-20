@@ -19,29 +19,24 @@
     .answers button:focus {outline: 2px solid #FFD700;}
     .answers button:hover, .answers .correct {background: #38ef7d; color: #30305a;}
     .answers .wrong {background: #f85032; color: #fff;}
-    #log {border-top: 1px solid #fff2; padding-top: 1em; margin-top: 1em; font-size: 0.97em; color: #ffffcc; min-height: 2em;} /* Improved contrast for accessibility */
+    #log {border-top: 1px solid #fff2; padding-top: 1em; margin-top: 1em; font-size: 0.97em; color: #f3f3aa; min-height: 2em;}
     #score-panel {margin-bottom: 1em; text-align: center; font-size: 1.12em; color: #f1e16a; font-weight: 600;}
     #story {background: #39397a; border-radius: 7px; padding: 0.8em 1em; margin-bottom: 1.2em; font-size: 1.05em; color: #fdfbdf; min-height: 2.2em;}
-    .enemy-img {font-size: 2.3em; margin-bottom: 0.2em; display: inline-block; vertical-align: middle; transition: transform 0.2s;} /* Animation for hit feedback */
-    .enemy-hit {transform: translateX(-5px);} /* Animation class for hit */
-    .inventory {margin: 0.6em 0 0.3em 0; display: flex; flex-wrap: wrap; gap: 8px; min-height: 2.2em; overflow-x: auto;} /* Scrollable on small screens for responsive design */
+    .enemy-img {font-size: 2.3em; margin-bottom: 0.2em; display: inline-block; vertical-align: middle;}
+    .inventory {margin: 0.6em 0 0.3em 0; display: flex; flex-wrap: wrap; gap: 8px; min-height: 2.2em;}
     .inv-btn {background: #f3f3aa; color: #2a2a2a; border-radius: 5px; padding: 0.25em 0.7em; font-size: 0.95em; margin-right: 0.2em; margin-bottom: 0.2em; display: flex; align-items: center; gap: 4px; cursor: pointer; border: none; transition: filter 0.2s; box-shadow: 0 2px 6px #0002;}
     .inv-btn:disabled {background: #b6b6a9; color: #5a5a5a; filter: grayscale(0.6); cursor: default;}
-    .inventory-empty {color: #b6b6a9; font-style: italic;} /* Placeholder for empty inventory */
     .progress-bar-bg {width: 100%; height: 12px; background: #2c2c3e; border-radius: 7px; margin: 7px 0 13px 0; overflow: hidden;}
     .progress-bar {height: 100%; background: linear-gradient(90deg,#FFD700,#38ef7d 70%); border-radius: 7px; transition: width 0.4s;}
-    #glossary-btn, #hint-btn, #save-exit-btn, #tutorial-btn, #stats-btn, #audio-toggle-btn {background: #70f570; color: #222; font-size: 1.0em; padding: 0.5em 1.3em; border: none; border-radius: 7px; cursor: pointer; margin: 0.4em 0.2em 0.4em 0; box-shadow: 0 2px 8px #0002; display: inline-block; min-width: 110px;}
+    #glossary-btn, #hint-btn, #save-exit-btn {background: #70f570; color: #222; font-size: 1.0em; padding: 0.5em 1.3em; border: none; border-radius: 7px; cursor: pointer; margin: 0.4em 0.2em 0.4em 0; box-shadow: 0 2px 8px #0002; display: inline-block; min-width: 110px;}
     #hint-btn[disabled] {background: #b6e2bc; color: #5a5a5a; cursor: default;}
-    #glossary-modal, #tutorial-modal, #stats-modal, #confirm-modal {position: fixed; top:0; left:0; width:100vw; height:100vh; background: rgba(0,0,0,0.66); z-index: 1000; display: none; align-items: center; justify-content: center;}
+    #glossary-modal {position: fixed; top:0; left:0; width:100vw; height:100vh; background: rgba(0,0,0,0.66); z-index: 1000; display: none; align-items: center; justify-content: center;}
     .modal-content {background: #22224A; color: #fdfbdf; padding: 2em 1.2em; border-radius: 14px; max-width: 350px; text-align: center; position: relative; box-shadow: 0 2px 16px #0007;}
     .modal-content button {background: #FFD700; color: #24243e; font-weight: 600; border-radius: 8px; padding: 0.4em 1.5em; margin-top: 1em; border: none; font-size: 1.06em; cursor: pointer;}
     .glossary-term {font-weight: bold; color: #FFD700;}
     .glossary-pron {font-style: italic; color: #a0e4e4;}
     .glossary-def {color: #f2eeb7; margin-bottom: 0.6em; display: block;}
-    .glossary-category {color: #a0e4e4; font-weight: bold; margin-top: 1em; cursor: pointer;}
-    .glossary-search {width: 90%; padding: 0.5em; margin-bottom: 1em; font-size: 1em; color: #222; background: #fff; border: none; border-radius: 5px;}
-    .cultural-note {position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #39397a; color: #fdfbdf; padding: 0.5em 1em; border-radius: 5px; box-shadow: 0 2px 8px #0002; z-index: 999; display: none; max-width: 300px; font-size: 0.9em; text-align: center;}
-    @media (max-width: 700px) {#game-container {padding: 1em 0.5em;} .stats {flex-direction: column; gap: 0.4em;} .enemy-img {font-size:2em;} #score-panel {font-size: 1em;} .inv-btn {font-size:0.89em;} .answers button {font-size: 0.9em; padding: 0.5em 0.8em;}}
+    @media (max-width: 700px) {#game-container {padding: 1em 0.5em;} .stats {flex-direction: column; gap: 0.4em;} .enemy-img {font-size:2em;} #score-panel {font-size: 1em;} .inv-btn {font-size:0.89em;}}
   </style>
 </head>
 <body>
@@ -49,15 +44,12 @@
   <h2>Hong Kong English RPG Quiz</h2>
   <div id="menu">
     <p>Answer Hong Kong English questions to defeat monsters and unlock the city's secrets!<br>
-    <button id="start-btn" tabindex="0">Start Game</button>
-    <button id="resume-btn" style="display:none;" tabindex="0">Resume Game</button>
+    <button id="start-btn">Start Game</button>
+    <button id="resume-btn" style="display:none;">Resume Game</button>
     <button id="glossary-btn" tabindex="0">Glossary</button>
-    <button id="tutorial-btn" tabindex="0">Tutorial</button>
-    <button id="stats-btn" tabindex="0">Stats</button>
-    <button id="audio-toggle-btn" tabindex="0">🔊 Audio On</button>
   </div>
   <div id="game" style="display:none;">
-    <button id="save-exit-btn" tabindex="0">Save & Exit</button>
+    <button id="save-exit-btn">Save & Exit</button>
     <div id="story"></div>
     <div class="progress-bar-bg"><div class="progress-bar" id="progress-bar"></div></div>
     <div id="score-panel">
@@ -88,12 +80,489 @@
   <div id="gameover" style="display:none;">
     <h2 id="gameover-title"></h2>
     <div id="gameover-msg"></div>
-    <button id="restart-btn" tabindex="0">Restart Game</button>
+    <button id="restart-btn">Restart Game</button>
   </div>
 </div>
 <div id="glossary-modal"><div class="modal-content"></div></div>
-<div id="tutorial-modal"><div class="modal-content"></div></div>
-<div id="stats-modal"><div class="modal-content"></div></div>
-<div id="confirm-modal"><div class="modal-content"></div></div>
-<div id="cultural-note" class="cultural-note"></div>
 <script>
+function playSound(type) {
+  try {
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    if(type==="hit") { o.type="square"; o.frequency.value=220; g.gain.value=0.16; o.start();
+      setTimeout(()=>{o.frequency.value=140;},70); setTimeout(()=>{g.gain.linearRampToValueAtTime(0,ctx.currentTime+0.08);},110); o.stop(ctx.currentTime+0.18);
+    }
+    else if(type==="wrong") { o.type="triangle"; o.frequency.value=100; g.gain.value=0.12; o.start();
+      setTimeout(()=>{g.gain.linearRampToValueAtTime(0,ctx.currentTime+0.11);},110); o.stop(ctx.currentTime+0.17);
+    }
+    else if(type==="boss") { o.type="sawtooth"; o.frequency.value=80; g.gain.value=0.22; o.start();
+      setTimeout(()=>{o.frequency.value=220;},80); setTimeout(()=>{g.gain.linearRampToValueAtTime(0,ctx.currentTime+0.17);},150); o.stop(ctx.currentTime+0.26);
+    }
+    else if(type==="victory") { o.type="triangle"; o.frequency.value=523; g.gain.value=0.18; o.start();
+      setTimeout(()=>{o.frequency.value=659;},100); setTimeout(()=>{o.frequency.value=784;},180); setTimeout(()=>{g.gain.linearRampToValueAtTime(0,ctx.currentTime+0.18);},270); o.stop(ctx.currentTime+0.32);
+    }
+    else if(type==="defeat") { o.type="square"; o.frequency.value=196; g.gain.value=0.17; o.start();
+      setTimeout(()=>{o.frequency.value=98;},90); setTimeout(()=>{g.gain.linearRampToValueAtTime(0,ctx.currentTime+0.18);},160); o.stop(ctx.currentTime+0.26);
+    }
+    else if(type==="item") { o.type="triangle"; o.frequency.value=600; g.gain.value=0.17; o.start();
+      setTimeout(()=>{o.frequency.value=900;},80); setTimeout(()=>{g.gain.linearRampToValueAtTime(0,ctx.currentTime+0.11);},130); o.stop(ctx.currentTime+0.18);
+    }
+    setTimeout(()=>ctx.close(),350);
+  } catch(e){}
+}
+const storyline = [
+  "You arrive at Tsim Sha Tsui, ready to test your Hong Kong English. A Code-Mixer appears.",
+  "You catch a minibus, but a Street Food Vendor blocks your way with questions.",
+  "You reach a shopping mall: the Office Lady challenges you to a language duel.",
+  "A mysterious Slangster appears, testing your Cantonese slang!",
+  "You enter the wet market. Auntie is waiting, ready to test your HK wisdom.",
+  "Boss ICAC Officer stands before you. Only the HK English Master can pass!",
+  "You win! The city greets you as a true Hong Kong English hero."
+];
+const npcs = [
+  {name:"Code-Mixer", cat:"Code-Mixing", hp:50, attack:11, img:"🦹‍♂️"},
+  {name:"Street Food Vendor", cat:"Loanwords", hp:65, attack:12, img:"🍢"},
+  {name:"Office Lady", cat:"Expressions", hp:75, attack:13, img:"👩‍💼"},
+  {name:"Slangster", cat:"Cantonese Slang", hp:80, attack:15, img:"😎"},
+  {name:"Wet Market Auntie", cat:"Concepts", hp:85, attack:15, img:"🧺"},
+  {name:"Boss: ICAC Officer", cat:"Boss", hp:110, attack:18, boss:true, img:"🕵️‍♂️"}
+];
+// --- 10 unique HK-themed items ---
+const itemList = [
+  {name:"Milk Tea",desc:"Restore 25 HP.",emoji:"🧋",effect:(state)=>{state.player.hp=Math.min(state.player.maxHp,state.player.hp+25);updateStats();logMsg("Milk Tea! +25 HP!");playSound("item");}},
+  {name:"Lai See",desc:"Next attack double damage.",emoji:"🧧",effect:(state)=>{state.skillEffects.doubleAttack=1;logMsg("Lai See: Next attack double!");playSound("item");}},
+  {name:"Egg Tart",desc:"Skip next enemy attack.",emoji:"🥧",effect:(state)=>{state.skillEffects.skipEnemyAttack=1;logMsg("Egg Tart: Enemy attack skipped!");playSound("item");}},
+  {name:"Umbrella",desc:"Block next 2 attacks.",emoji:"🌂",effect:(state)=>{state.skillEffects.block=2;logMsg("Umbrella: Block 2 attacks!");playSound("item");}},
+  {name:"Turnip Cake",desc:"Restore to full HP.",emoji:"🥮",effect:(state)=>{state.player.hp=state.player.maxHp;updateStats();logMsg("Turnip Cake: Full HP!");playSound("item");}},
+  {name:"Octopus Card",desc:"Take an extra turn after this.",emoji:"💳",effect:(state)=>{state.skillEffects.extraTurn=1;logMsg("Octopus: Extra turn!");playSound("item");}},
+  {name:"Egg Puff",desc:"Next wrong answer: no damage.",emoji:"🧇",effect:(state)=>{state.skillEffects.noDamage=1;logMsg("Egg Puff: Next wrong answer is safe.");playSound("item");}},
+  {name:"Taxi Flag",desc:"Randomly gain 10~30 points.",emoji:"🚕",effect:(state)=>{let pts=10+10*Math.floor(Math.random()*3);state.score+=pts;updateStats();logMsg(`Taxi ride! +${pts} points!`);playSound("item");}},
+  {name:"Wet Towel",desc:"Recover 10 HP & skip next attack.",emoji:"🧻",effect:(state)=>{state.player.hp=Math.min(state.player.maxHp,state.player.hp+10);state.skillEffects.skipEnemyAttack=1;updateStats();logMsg("Wet Towel: +10 HP & skip attack!");playSound("item");}},
+  {name:"Pineapple Bun",desc:"Instantly gain 25 points.",emoji:"🍍",effect:(state)=>{state.score+=25;updateStats();logMsg("Pineapple Bun: +25 points!");playSound("item");}}
+];
+// --- Expanded questions (add more as needed) ---
+const questions = [
+  // Loanwords
+  {cat:"Loanwords", term:"Cha chan teng", pron:"[cha chaan teng]", desc:"A classic Hong Kong eatery serving both Cantonese and Western food.", options:["Cha chan teng","Mahjong","Egg tart","Ding ding"]},
+  {cat:"Loanwords", term:"Dim sum", pron:"[dim sum]", desc:"Small bite-sized dishes, often served in bamboo baskets.", options:["Dim sum","Congee","Gweilo","Turnip cake"]},
+  {cat:"Loanwords", term:"Siu mei", pron:"[siu mei]", desc:"Cantonese roasted meats, like char siu or roast duck.", options:["Siu mei","Tea money","Lai see","Egg puff"]},
+  {cat:"Loanwords", term:"Gweilo", pron:"[gwai lo]", desc:"An informal Cantonese term for a foreigner, especially a white person.", options:["Gweilo","Kai fong","Mark six","Jetso"]},
+  {cat:"Loanwords", term:"Egg tart", pron:"[dan tat]", desc:"Pastry shell with egg custard.", options:["Egg tart","Wet towel","Chop","Cha chan teng"]},
+  {cat:"Loanwords", term:"Dai pai dong", pron:"[dai pai dong]", desc:"Open-air food stall in Hong Kong.", options:["Dai pai dong","Dim sum","Octopus","Tea money"]},
+  {cat:"Loanwords", term:"Mahjong", pron:"[mahjong]", desc:"Chinese tile-based game, popular for gambling.", options:["Mahjong","Egg tart","Wet market","Kai fong"]},
+  {cat:"Loanwords", term:"Congee", pron:"[congee]", desc:"Rice porridge, often served with toppings.", options:["Congee","Dim sum","Lai see","Siu mei"]},
+  // Expressions
+  {cat:"Expressions", term:"Add oil", pron:"[aht yow]", desc:"A Chinglish phrase used to encourage someone.", options:["Add oil","No eye see","Wet market","Hand letter"]},
+  {cat:"Expressions", term:"Long time no see", pron:"[long time no see]", desc:"A greeting when you haven't met someone for a while.", options:["Long time no see","Eat jor mud","Feng shui","Egg tart"]},
+  {cat:"Expressions", term:"Mark six", pron:"[mark six]", desc:"The most popular lottery game in Hong Kong.", options:["Mark six","Egg puff","Taxi flag","No leung heart"]},
+  {cat:"Expressions", term:"Same same but different.", pron:"", desc:"Almost the same as before but a little different.", options:["Same same but different.","Eat ng eat rice","Octopus card","Egg puff"]},
+  {cat:"Expressions", term:"I am full of fire!", pron:"", desc:"Very angry or aggressive.", options:["I am full of fire!","Wet towel","Chop","Kai fong"]},
+  // Concepts
+  {cat:"Concepts", term:"Ding ding", pron:"[ding ding]", desc:"Hong Kong’s nickname for the double-decker tram.", options:["Ding ding","Gai dan jai","Lo mai gai","Congee"]},
+  {cat:"Concepts", term:"Tea money", pron:"[tea money]", desc:"Money for tea at yum cha; sometimes a small bribe.", options:["Tea money","Egg tart","Chop","Kai fong"]},
+  {cat:"Concepts", term:"Yum cha", pron:"[yum cha]", desc:"To 'drink tea', meaning to go for dim sum.", options:["Yum cha","Dim sum","Wet market","Hand letter"]},
+  {cat:"Concepts", term:"Octopus card", pron:"[Octopus card]", desc:"A contactless payment card used everywhere in HK.", options:["Octopus card","Egg tart","Chop","Taxi flag"]},
+  // Code-Mixing
+  {cat:"Code-Mixing", term:"Must can", pron:"[must can]", desc:"Chinglish for 'definitely possible!'", options:["Must can","No eye see","Siu4","People mountain people sea"]},
+  {cat:"Code-Mixing", term:"No eye see", pron:"[no eye see]", desc:"Means 'don’t want to watch' or 'don’t want to participate'.", options:["No eye see","Add oil","Yum cha","Joss paper"]},
+  {cat:"Code-Mixing", term:"Eat jor mud", pron:"[eat jor mud]", desc:"Direct translation: 'What did you eat?'", options:["Eat jor mud","Egg puff","Kai fong","Egg tart"]},
+  {cat:"Code-Mixing", term:"People mountain people sea", pron:"[people mountain people sea]", desc:"A phrase meaning 'very crowded'.", options:["People mountain people sea","Tea money","Egg tart","Dim sum"]},
+  // Cantonese Slang
+  {cat:"Cantonese Slang", term:"Chop", pron:"[chop]", desc:"What do you call a personal rubber stamp, often used for signatures?", options:["Chop","Egg tart","Octopus","Joss paper"]},
+  {cat:"Cantonese Slang", term:"No show", pron:"[no show]", desc:"A slang term for someone who doesn't turn up to an event or appointment.", options:["No show","Wet market","People mountain people sea","Tea money"]},
+  {cat:"Cantonese Slang", term:"Chicken rice", pron:"[gai fan]", desc:"A code word for a brothel or prostitution in Cantonese slang.", options:["Chicken rice","Dim sum","Egg puff","Cha chan teng"]},
+  {cat:"Cantonese Slang", term:"Blow water", pron:"[fiu seoi]", desc:"What does 'blow water' mean in Cantonese slang?", options:["Chat casually","Take a shower","Boil tea","Play mahjong"]},
+  {cat:"Cantonese Slang", term:"Dragon gate", pron:"[lung mun]", desc:"A metaphor for passing a difficult exam or challenge.", options:["Dragon gate","Wet towel","Egg tart","Tea money"]},
+  // Boss
+  {cat:"Boss", type:"desc", q:"Which is a Hong Kong contactless card?", correct:"Octopus card", options:["Egg tart","Octopus card","Wet market","Jetso"]},
+  {cat:"Boss", type:"desc", q:"Which organization is famous for anti-corruption in Hong Kong?", correct:"ICAC", options:["ICAC","KMB","MPF","Jetso"]}
+];
+let glossary = [];
+function loadGlossary() {
+  try {
+    const g = JSON.parse(localStorage.getItem("hkrpgquiz_glossary")||"[]");
+    if(Array.isArray(g)) glossary = g;
+  } catch(e){glossary=[];}
+}
+function saveGlossary() {
+  localStorage.setItem("hkrpgquiz_glossary", JSON.stringify(glossary));
+}
+loadGlossary();
+let state = {}, usedQuestions = [], currQuestion = null, bossQuestionPool = [], hintUsed = false;
+let randomEventHappened = false, inRandomEvent = false, randomEventQ=0, randomEventCorrect=0, itemsGivenThisGame=[];
+function saveGame() {
+  localStorage.setItem("hkrpgquiz_save", JSON.stringify({
+    state, usedQuestions, currQuestion, bossQuestionPool, hintUsed,
+    randomEventHappened, inRandomEvent, randomEventQ, randomEventCorrect, itemsGivenThisGame
+  }));
+  document.getElementById('resume-btn').style.display = '';
+  setTimeout(()=>{document.getElementById('resume-btn').style.display = '';},50);
+}
+function loadGame() {
+  let d = JSON.parse(localStorage.getItem("hkrpgquiz_save"));
+  if(!d) return false;
+  state=d.state; usedQuestions=d.usedQuestions; currQuestion=d.currQuestion;
+  bossQuestionPool=d.bossQuestionPool; hintUsed=d.hintUsed;
+  randomEventHappened=d.randomEventHappened; inRandomEvent=d.inRandomEvent;
+  randomEventQ=d.randomEventQ; randomEventCorrect=d.randomEventCorrect;
+  itemsGivenThisGame=d.itemsGivenThisGame;
+  document.getElementById('menu').style.display = 'none';
+  document.getElementById('game').style.display = '';
+  document.getElementById('gameover').style.display = 'none';
+  updateStory(); updateInventoryPanel(); updateStats();
+  nextNpc(true);
+  return true;
+}
+function clearSave() {
+  localStorage.removeItem("hkrpgquiz_save");
+  document.getElementById('resume-btn').style.display = 'none';
+}
+function startGame() {
+  document.getElementById('menu').style.display = 'none';
+  document.getElementById('game').style.display = '';
+  document.getElementById('gameover').style.display = 'none';
+  state = {player: {hp:100, maxHp:100, attack:15}, npcIndex: 0, npcs: JSON.parse(JSON.stringify(npcs)), log: [], score: 0, inventory: [], skillEffects: {}};
+  usedQuestions = [];
+  bossQuestionPool = shuffle(questions.filter(q=>q.cat==="Boss"));
+  hintUsed = false;
+  randomEventHappened = false; inRandomEvent = false; randomEventQ=0; randomEventCorrect=0; itemsGivenThisGame=[];
+  giveStartItems();
+  updateStory();
+  updateInventoryPanel();
+  updateStats();
+  nextNpc();
+  saveGame();
+}
+function giveStartItems() {
+  itemsGivenThisGame = [];
+  let pool = shuffle(itemList.slice());
+  for(let i=0;i<2;i++) {
+    let it = {...pool.pop()};
+    state.inventory.push(it);
+    itemsGivenThisGame.push(it.name);
+  }
+  updateInventoryPanel();
+}
+function updateStats() {
+  let playerHp = Math.max(0, state.player.hp);
+  let npc = state.npcs[state.npcIndex];
+  let npcHp = Math.max(0, npc.hp);
+  document.getElementById('player-hp').style.width = (playerHp/state.player.maxHp*100) + "%";
+  document.getElementById('npc-hp').style.width = (npcHp/npc.hp*100) + "%";
+  document.getElementById('player-hp-text').textContent = `HP: ${playerHp}`;
+  document.getElementById('npc-hp-text').textContent = `HP: ${npcHp}`;
+  document.getElementById('npc-name').textContent = npc.name;
+  document.getElementById('npc-img').textContent = npc.img || "😈";
+  document.getElementById('score').textContent = state.score;
+  updateProgressBar();
+  saveGame();
+}
+function logMsg(msg) {
+  state.log.push(msg);
+  if (state.log.length > 7) state.log.shift();
+  document.getElementById('log').innerHTML = state.log.join('<br>');
+}
+function updateStory() {
+  let idx = Math.min(state.npcIndex, storyline.length-1);
+  document.getElementById('story').innerHTML = storyline[idx];
+}
+function nextNpc(isResume) {
+  let npc = state.npcs[state.npcIndex];
+  npc.hp = npc.hp || 60 + 10*state.npcIndex;
+  logMsg(`<span style="color:#FFD700">A wild <b>${npc.name}</b> appears!</span>`);
+  if(npc.cat==="Boss") playSound("boss");
+  updateStats();
+  updateStory();
+  if(isResume && currQuestion) showQuestion(currQuestion); else nextQuestion();
+}
+function getQuestionsForCat(cat) {
+  let pool;
+  pool = questions.filter(q=>q.cat===cat && !usedQuestions.includes(q.term));
+  if (pool.length < 1) pool = questions.filter(q=>!usedQuestions.includes(q.term)&&q.cat!=="Boss");
+  return pool;
+}
+function maybeRandomEvent() {
+  if(randomEventHappened||inRandomEvent||state.npcs[state.npcIndex].cat==="Boss") return false;
+  if(Math.random()<0.3) {
+    inRandomEvent = true; randomEventQ=0, randomEventCorrect=0;
+    document.getElementById("event").textContent = "Lucky event! Answer 2 questions correctly in a row to win a rare item!";
+    setTimeout(()=>randomEventQn(),400);
+    return true;
+  }
+  return false;
+}
+function randomEventQn() {
+  let pool = questions.filter(q=>!usedQuestions.includes(q.term)&&q.cat!=="Boss");
+  shuffle(pool);
+  let q = pool[0];
+  currQuestion = q;
+  let answers = q.options.slice();
+  shuffle(answers);
+  document.getElementById('question').innerHTML = `Lucky Question ${randomEventQ+1}/2:<br><br><em>${q.desc}</em>`;
+  let ansDiv = document.getElementById('answers');
+  ansDiv.innerHTML = '';
+  answers.forEach(ans=>{
+    let btn = document.createElement('button');
+    btn.textContent = ans;
+    btn.onclick = ()=>randomEventAnswer(ans===q.term, ans, q);
+    ansDiv.appendChild(btn);
+  });
+}
+function randomEventAnswer(correct, answer, q) {
+  Array.from(document.querySelectorAll('.answers button')).forEach(btn=>{
+    btn.disabled=true;
+    if (btn.textContent===q.term) btn.classList.add('correct');
+    if (btn.textContent===answer && !correct) btn.classList.add('wrong');
+  });
+  setTimeout(()=>{
+    if(correct) { playSound("hit"); randomEventCorrect++; }
+    else playSound("wrong");
+    usedQuestions.push(q.term);
+    randomEventQ++;
+    if(randomEventQ<2) {
+      setTimeout(()=>randomEventQn(),350);
+    } else {
+      inRandomEvent = false; randomEventHappened = true;
+      if(randomEventCorrect===2) {
+        let remaining = itemList.filter(it=>!itemsGivenThisGame.includes(it.name)&&!state.inventory.some(i=>i.name===it.name));
+        if(remaining.length) {
+          let it = {...shuffle(remaining)[0]};
+          state.inventory.push(it); itemsGivenThisGame.push(it.name);
+          logMsg(`<span style="color:#FFD700">You won a new item: ${it.emoji} <b>${it.name}</b>!</span>`);
+          playSound("item");
+          updateInventoryPanel();
+        } else {
+          logMsg(`<span style="color:#FFD700">You answered both correctly! But you already have all items.</span>`);
+        }
+      } else {
+        logMsg(`<span style="color:#FFD700">You didn't get both right. No prize this time!</span>`);
+      }
+      document.getElementById("event").textContent = "";
+      setTimeout(()=>nextQuestion(),700);
+    }
+  },350);
+}
+function nextQuestion() {
+  if(maybeRandomEvent()) return;
+  state.skillEffects = state.skillEffects || {};
+  hintUsed = false;
+  document.getElementById("hint-btn").disabled = false;
+  document.getElementById("event").textContent = "";
+  let npc = state.npcs[state.npcIndex];
+  if(npc.cat==="Boss") {
+    if(!bossQuestionPool.length) bossQuestionPool = shuffle(questions.filter(q=>q.cat==="Boss"));
+    let q;
+    do { q = bossQuestionPool.pop(); } while(q && usedQuestions.includes(q.q) && bossQuestionPool.length>0);
+    if(!q) { gameOver(true); return; }
+    usedQuestions.push(q.q);
+    showQuestion(q);
+    return;
+  }
+  let pool = getQuestionsForCat(npc.cat).filter(q=>!usedQuestions.includes(q.term));
+  shuffle(pool);
+  let q = pool[0];
+  if(!q) { gameOver(true); return; }
+  usedQuestions.push(q.term);
+  showQuestion(q);
+}
+function showQuestion(q) {
+  currQuestion = q;
+  let answers = (q.cat==="Boss") ? q.options.slice() : q.options.slice();
+  shuffle(answers);
+  document.getElementById('question').innerHTML =
+    (q.cat==="Boss"
+      ? `<b>Boss Question:</b><br>${q.q}`
+      : `What matches this description?<br><br><em>${q.desc}</em>`);
+  let ansDiv = document.getElementById('answers');
+  ansDiv.innerHTML = '';
+  answers.forEach(ans=>{
+    let btn = document.createElement('button');
+    btn.textContent = ans;
+    btn.onclick = ()=>answer((q.cat==="Boss"?ans===q.correct:ans===q.term), ans, q.cat==="Boss");
+    ansDiv.appendChild(btn);
+  });
+}
+function answer(correct, answer, boss) {
+  let npc = state.npcs[state.npcIndex];
+  let resultMsg = '';
+  let attack = state.player.attack;
+  if(state.skillEffects.doubleAttack) { attack *= 2; state.skillEffects.doubleAttack = 0; resultMsg += "<span style='color:#FFD700'>Double Damage!</span><br>"; }
+  let npcAttack = npc.attack;
+  if(state.skillEffects.block){
+    npcAttack = 0;
+    state.skillEffects.block--;
+    resultMsg += `<span style="color:#FFD7B5">Umbrella: Attack blocked!</span><br>`;
+  }
+  else if(state.skillEffects.skipEnemyAttack && !correct){
+    npcAttack = 0;
+    state.skillEffects.skipEnemyAttack = 0;
+    resultMsg += `<span style="color:#FFD7B5">Egg Tart/Wet Towel: Enemy attack skipped!</span><br>`;
+  }
+  if(state.skillEffects.noDamage && !correct) {
+    npcAttack = 0;
+    state.skillEffects.noDamage = 0;
+    resultMsg += `<span style="color:#FFD7B5">Egg Puff: No damage for this mistake!</span><br>`;
+  }
+  Array.from(document.querySelectorAll('.answers button')).forEach(btn=>{
+    btn.disabled=true;
+    if(boss){
+      if(btn.textContent===currQuestion.correct) btn.classList.add('correct');
+      if(btn.textContent===answer && !correct) btn.classList.add('wrong');
+    } else {
+      if (btn.textContent===currQuestion.term) btn.classList.add('correct');
+      if (btn.textContent===answer && !correct) btn.classList.add('wrong');
+    }
+  });
+  setTimeout(()=>{
+    if (correct) {
+      playSound("hit");
+      state.score+=20;
+      npc.hp -= attack;
+      resultMsg += `<span style="color:#38ef7d">Correct! You hit for ${attack} damage. (+20 pts)</span>`;
+      if(boss){
+        if(!glossary.some(g=>g.term===currQuestion.correct))
+          glossary.push({
+            term: currQuestion.correct,
+            pron: "",
+            desc: currQuestion.q
+          });
+      } else {
+        if(!glossary.some(g=>g.term===currQuestion.term))
+          glossary.push({
+            term: currQuestion.term,
+            pron: currQuestion.pron||"",
+            desc: currQuestion.desc
+          });
+      }
+      saveGlossary();
+      if(state.skillEffects.extraTurn) {
+        state.skillEffects.extraTurn=0;
+        updateStats();
+        logMsg(resultMsg + "<br><span style='color:#FFD700'>Octopus Card: You get another question!</span>");
+        setTimeout(()=>nextQuestion(), 700);
+        return;
+      }
+    } else {
+      playSound("wrong");
+      state.player.hp -= npcAttack;
+      resultMsg += `<span style="color:#f85032">Wrong! Enemy hits you for ${npcAttack} damage.</span>`;
+    }
+    updateStats();
+    logMsg(resultMsg);
+    setTimeout(()=>{ checkBattle(); }, 900);
+  }, 350);
+}
+function shuffle(array) {
+  for(let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i+1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+function updateInventoryPanel() {
+  let div = document.getElementById('inventory');
+  div.innerHTML = '';
+  state.inventory.forEach((i,idx)=>{
+    let btn = document.createElement('button');
+    btn.className="inv-btn";
+    btn.innerHTML = `${i.emoji} ${i.name}`;
+    btn.title = i.desc;
+    btn.onclick = ()=>{
+      i.effect(state);
+      state.inventory.splice(idx,1);
+      updateInventoryPanel();
+      updateStats();
+      saveGame();
+    };
+    div.appendChild(btn);
+  });
+}
+function checkBattle() {
+  let npc = state.npcs[state.npcIndex];
+  if (npc.hp <= 0) {
+    if (npc.boss) return gameOver(true);
+    logMsg(`<span style="color:#FFD700">You defeated ${npc.name}!</span>`);
+    state.npcIndex++;
+    if (state.npcIndex >= state.npcs.length) return gameOver(true);
+    setTimeout(()=>nextNpc(), 700);
+  } else if (state.player.hp <= 0) {
+    gameOver(false);
+  } else {
+    setTimeout(()=>nextQuestion(), 400);
+  }
+}
+function gameOver(won) {
+  clearSave();
+  document.getElementById('game').style.display = 'none';
+  document.getElementById('gameover').style.display = '';
+  if (won) {
+    playSound("victory");
+    document.getElementById('gameover-title').innerHTML = "Victory!";
+    document.getElementById('gameover-msg').innerHTML = `${storyline[storyline.length-1]}<br><br>
+    <b>Final Score: ${state.score}</b>`;
+  } else {
+    playSound("defeat");
+    document.getElementById('gameover-title').innerHTML = "Defeated!";
+    document.getElementById('gameover-msg').innerHTML = `You were defeated. Try again and add oil!<br>
+    <b>Score: ${state.score}</b>`;
+  }
+}
+function updateProgressBar() {
+  let total = npcs.length;
+  let done = state.npcIndex;
+  document.getElementById("progress-bar").style.width = `${(done/total*100).toFixed(1)}%`;
+}
+document.getElementById("hint-btn").onclick = function() {
+  if(hintUsed) return;
+  let q = currQuestion;
+  let correctText = (q.cat==="Boss" && q.correct) ? q.correct : q.term;
+  let wrongs = Array.from(document.querySelectorAll(".answers button")).filter(btn=>btn.textContent!==correctText);
+  if(wrongs.length){
+    wrongs[0].style.background = "#888";
+    wrongs[0].style.color = "#fff";
+  }
+  logMsg(`<span style="color:#FFD700">Hint used!</span>`);
+  hintUsed = true;
+  this.disabled = true;
+};
+function showGlossary() {
+  let modal = document.getElementById("glossary-modal");
+  let c = modal.querySelector(".modal-content");
+  let sortedGlossary = glossary.slice().sort((a,b)=>a.term.localeCompare(b.term));
+  c.innerHTML = `<h3>Glossary</h3>
+    <div style="max-height:260px;overflow:auto;text-align:left">
+    ${sortedGlossary.length===0?"<span style='color:#FFD700'>You haven't learned any terms yet.</span>":
+      sortedGlossary.map(g=>
+        `<div>
+          <span class="glossary-term">${g.term}</span>
+          <span class="glossary-pron">${g.pron ? " " + g.pron : ""}</span>
+          <br><span class="glossary-def">${g.desc}</span>
+        </div>`
+      ).join("")}
+    </div>
+    <button id="close-glossary-btn">Close</button>`;
+  modal.style.display = "flex";
+  c.querySelector("#close-glossary-btn").onclick = ()=>{ modal.style.display = "none"; };
+}
+document.getElementById("glossary-btn").onclick = showGlossary;
+document.getElementById("glossary-modal").onclick = function(e){ if(e.target===this) this.style.display = "none"; };
+document.getElementById("start-btn").onclick = function(){ clearSave(); startGame(); };
+document.getElementById("restart-btn").onclick = function(){ clearSave(); startGame(); };
+document.getElementById("save-exit-btn").onclick = function(){
+  saveGame();
+  document.getElementById('game').style.display = 'none';
+  document.getElementById('gameover').style.display = 'none';
+  document.getElementById('menu').style.display = '';
+  document.getElementById('resume-btn').style.display = '';
+};
+document.getElementById("resume-btn").onclick = function(){ loadGame(); };
+if(localStorage.getItem("hkrpgquiz_save")) document.getElementById('resume-btn').style.display = '';
+</script>
+</body>
+</html>
+<!-- End of HTML file -->
+<!-- This is a simple RPG quiz game about Hong Kong English. It includes a glossary, inventory system, and various game mechanics. The game is designed to be played in a web browser and uses JavaScript for interactivity. The code includes functions for saving and loading game state, handling questions and answers, and managing the player's inventory and stats. The game features a unique storyline and characters related to Hong Kong culture. -->
+<!-- The game is designed to be engaging and educational, providing players with a fun way to learn about Hong Kong English while battling various characters. The code is structured to allow for easy expansion and customization, making it a versatile template for similar games. -->
+<!-- The game is fully functional and can be played directly in a web browser. It includes sound effects, animations, and a responsive design for different screen sizes. The game is a great example of how to create an interactive quiz experience using HTML, CSS, and JavaScript. -->
+<!-- The game is also designed to be accessible, with features like keyboard navigation and screen reader compatibility. The code is well-organized and commented, making it easy to understand and modify for future development. -->
