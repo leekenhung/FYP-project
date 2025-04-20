@@ -1,0 +1,124 @@
+// --- HINT FUNCTIONALITY (Gameplay Enhancement) ---
+document.getElementById("hint-btn").onclick = function() {
+  if(hintUsed) return;
+  let q = currQuestion;
+  let correctText = (q.cat==="Boss" && q.correct) ? q.correct : q.term;
+  let wrongs = Array.from(document.querySelectorAll(".answers button")).filter(btn=>btn.textContent!==correctText);
+  if(wrongs.length){
+    wrongs[0].style.background = "#888";
+    wrongs[0].style.color = "#fff";
+  }
+  logMsg("<span style='color:#FFD700'>Hint used!</span>");
+  hintUsed = true;
+  this.disabled = true;
+  gameStats.totalHints++; // Track hint usage for stats (Replayability and Engagement)
+  saveStats();
+  // Reset no-hint streak achievement tracker
+  achievements.find(a => a.name === "No Hints Needed").tracker = 0;
+  updateAchievements();
+};
+
+// --- GLOSSARY DISPLAY WITH SEARCH AND CATEGORIZATION (UI/UX Improvement: Glossary Enhancements) ---
+function showGlossary() {
+  let modal = document.getElementById("glossary-modal");
+  let c = modal.querySelector(".modal-content");
+  let sortedGlossary = glossary.slice().sort((a,b)=>a.term.localeCompare(b.term));
+  // Group by category for categorization
+  let groupedGlossary = {};
+  sortedGlossary.forEach(g => {
+    let cat = g.cat || "Uncategorized";
+    if (!groupedGlossary[cat]) groupedGlossary[cat] = [];
+    groupedGlossary[cat].push(g);
+  });
+  c.innerHTML = `
+    <h3>Glossary</h3>
+    <input type="text" class="glossary-search" placeholder="Search terms..." onkeyup="filterGlossary(this.value)">
+    <div id="glossary-content" style="max-height:260px;overflow:auto;text-align:left">
+      ${glossary.length===0 ? "<span style='color:#FFD700'>You haven't learned any terms yet.</span>" : 
+        Object.keys(groupedGlossary).sort().map(cat => `
+          <div class="glossary-category" onclick="toggleCategory(this, '${cat}')">${cat} (${groupedGlossary[cat].length}) ▼</div>
+          <div id="category-${cat}" style="display:block;">
+            ${groupedGlossary[cat].map(g => `
+              <div class="glossary-item">
+                <span class="glossary-term">${g.term}</span>
+                <span class="glossary-pron">${g.pron ? " " + g.pron : ""}</span>
+                <br><span class="glossary-def">${g.desc}</span>
+              </div>
+            `).join("")}
+          </div>
+        `).join("")}
+    </div>
+    <button id="close-glossary-btn">Close</button>
+    <button id="reset-glossary-btn">Reset Glossary</button>
+  `;
+  modal.style.display = "flex";
+  c.querySelector("#close-glossary-btn").onclick = function(){ modal.style.display = "none"; };
+  c.querySelector("#reset-glossary-btn").onclick = function(){
+    showConfirmModal("Are you sure you want to reset your glossary? All learned terms will be cleared.", function() {
+      glossary = [];
+      localStorage.removeItem("hkrpgquiz_glossary");
+      logMsg("<span style='color:#FFD700'>Glossary reset!</span>");
+      showGlossary(); // Refresh the modal
+    });
+  };
+  modal.onclick = function(e){ if(e.target===this) this.style.display = "none"; };
+  // Accessibility: Focus on search input for easier navigation
+  c.querySelector(".glossary-search").focus();
+}
+document.getElementById("glossary-btn").onclick = showGlossary;
+
+// Function to toggle category visibility (UI/UX Improvement: Glossary Categorization)
+function toggleCategory(header, cat) {
+  let content = document.getElementById(`category-${cat}`);
+  if (content.style.display === "block") {
+    content.style.display = "none";
+    header.innerHTML = `${cat} (${content.children.length}) ►`;
+  } else {
+    content.style.display = "block";
+    header.innerHTML = `${cat} (${content.children.length}) ▼`;
+  }
+}
+
+// Function to filter glossary based on search input (UI/UX Improvement: Glossary Search)
+function filterGlossary(searchText) {
+  searchText = searchText.toLowerCase();
+  let items = document.querySelectorAll(".glossary-item");
+  let categories = document.querySelectorAll(".glossary-category");
+  let categoryContents = document.querySelectorAll("[id^='category-']");
+  items.forEach(item => {
+    let term = item.querySelector(".glossary-term").textContent.toLowerCase();
+    if (searchText === "" || term.includes(searchText)) {
+      item.style.display = "block";
+    } else {
+      item.style.display = "none";
+    }
+  });
+  // Update category counts based on visible items
+  categories.forEach(cat => {
+    let catName = cat.textContent.split(' ')[0];
+    let content = document.getElementById(`category-${catName}`);
+    let visibleItems = Array.from(content.querySelectorAll(".glossary-item")).filter(item => item.style.display !== "none").length;
+    cat.innerHTML = `${catName} (${visibleItems}) ${content.style.display === "block" ? '▼' : '►'}`;
+  });
+}
+
+// --- CONFIRM MODAL FOR RESET (Bug Fixes and Polish: Glossary Reset Confirmation) ---
+function showConfirmModal(message, onConfirm) {
+  let modal = document.getElementById("confirm-modal");
+  let c = modal.querySelector(".modal-content");
+  c.innerHTML = `
+    <h3>Confirm</h3>
+    <p>${message}</p>
+    <button id="confirm-yes-btn">Yes</button>
+    <button id="confirm-no-btn">No</button>
+  `;
+  modal.style.display = "flex";
+  c.querySelector("#confirm-yes-btn").onclick = function() {
+    onConfirm();
+    modal.style.display = "none";
+  };
+  c.querySelector("#confirm-no-btn").onclick = function() {
+    modal.style.display = "none";
+  };
+  modal.onclick = function(e) { if(e.target===this) this.style.display = "none"; };
+}
