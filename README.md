@@ -36,5 +36,4 @@ Each question has a category, term, description, and 4 answer options.
 Items:
 Add new items to the itemList array.
 Each item has a name, description, emoji, and an effect function.
-[Uploading hongkong_english_rpg_quiz.html…]()
 
