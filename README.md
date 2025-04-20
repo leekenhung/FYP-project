@@ -2,6 +2,7 @@
 Hong Kong English RPG Quiz
 Hong Kong English RPG Quiz is a browser-based educational RPG game.
 Battle classic Hong Kong characters by answering multiple-choice questions about HK English, Cantonese slang, Chinglish, and unique local culture—while collecting iconic Hong Kong items to boost your powers!
+
 Features
 🎮 RPG battle system with HP, enemy bosses, and item inventory
 🇭🇰 Quiz questions about loanwords, code-mixing, local concepts, and expressions
@@ -21,8 +22,12 @@ Defeat each “monster” by answering multiple-choice HK English questions.
 Use items from your inventory to heal, block attacks, or gain points.
 Unlock glossary entries as you progress.
 Defeat the final boss (ICAC Officer) to win!
+
 Screenshots
 ![image](https://github.com/user-attachments/assets/be379373-3ad9-4896-bf6a-3f578d7d6115)
+![image](https://github.com/user-attachments/assets/06b069e6-a1ff-48a6-86e9-f680f80a105c)
+
+
 Adding/Editing Questions & Items
 Questions:
 Edit or add to the questions array in index.html.
